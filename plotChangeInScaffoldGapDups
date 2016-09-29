@@ -1,0 +1,26 @@
+#!/usr/bin/env Rscript
+if (!require("pacman")) install.packages("pacman", repos = "https://cloud.r-project.org/")
+pacman::p_load(argparse, ggplot2, dplyr, plyr, tools)
+
+parser <- ArgumentParser(description = 'Plot a view of scaffold gap sizes and how they have changed across assembly versions')
+parser$add_argument('--output', help = 'Output PDF file', default = 'scaffold_gaps.pdf')
+parser$add_argument('dirs', nargs = '+', help = 'directories containing dup files describing the scaffold dups')
+
+args <- parser$parse_args()
+
+dup_files <- sapply(args$dirs, pattern="*.dups$", list.files)
+# Read files
+ungrouped_dfs <- sapply(seq_along(dup_files), function(x) { sapply(dup_files[[x]], function(y) { read.table(paste(names(dup_files)[x], y, sep='/'), header=T, sep='\t') }, simplify=FALSE) })
+# Ensure directory names stick around
+names(ungrouped_dfs) <- names(dup_files)
+# Now we have a list of list of data frames.
+# Group the data frames and create a Genome column containing their file name
+grouped_dfs <- llply(ungrouped_dfs, function(x) { bind_rows(x, .id='Genome') })
+# Now we have a list of data frames.
+# Group the data frames again, creating a Version column
+df <- bind_rows(grouped_dfs, .id='Version')
+# Strip .dups extension
+df$Genome <- sapply(df$Genome, file_path_sans_ext)
+
+p <- ggplot(df, aes(x=dupSize)) + facet_grid(Genome ~ Version, scales='free_y') + geom_histogram(binwidth=10) + coord_cartesian(xlim=c(0, 1000)) + ggtitle("Tandem duplications around scaffold gaps, length distribution over time") + theme_bw()
+ggsave(args$output, p, height=16)

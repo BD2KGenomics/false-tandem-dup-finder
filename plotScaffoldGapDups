@@ -1,0 +1,14 @@
+#!/usr/bin/env Rscript
+if (!require("pacman")) install.packages("pacman", repos = "https://cloud.r-project.org/")
+pacman::p_load(argparse, ggplot2, dplyr, plyr, tools)
+
+parser <- ArgumentParser(description = 'Plot a view of scaffold gap sizes and how they have changed across assembly versions')
+parser$add_argument('--output', help = 'Output PDF file', default = 'scaffold_gaps.pdf')
+parser$add_argument('scaffoldGapDupFile', help = 'dup file describing the scaffold dups')
+
+args <- parser$parse_args()
+
+df <- read.table(args$scaffoldGapDupFile, header=T)
+
+p <- ggplot(df, aes(x=dupSize)) + geom_histogram(binwidth=10) + coord_cartesian() + ggtitle("Tandem duplications around scaffold gaps, length distribution") + theme_bw()
+ggsave(args$output, p)
