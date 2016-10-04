@@ -87,3 +87,10 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# sonLib library
+sonLib/
+
+# vim
+*~
+*swp
