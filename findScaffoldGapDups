@@ -22,14 +22,12 @@ def alignWithBlat(seq1, seq2):
 
         # Run blat command
         popenCatch("blat %s %s -q=dna -tileSize=12 -stepSize=4 -minIdentity=95"
-                   " -noHead %s" % (seq1Path, seq2Path, outPath))
+                   " -repMatch=10 -noHead %s" % (seq1Path, seq2Path, outPath))
 
         # There may be multiple alignments, but there can be at most one
         # that fits our requirements (starts at 0 in seq1, ends at
         # len(seq2))
 
-        # TODO blat has to output the one line psl string to the file,
-        # Try to correct for this
         with open(outPath, 'r') as outFile:
             for line in outFile:
                 line = line.rstrip()
