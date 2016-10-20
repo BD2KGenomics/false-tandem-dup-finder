@@ -16,9 +16,10 @@ def alignWithBlat(seq1, seq2):
     seq2Path = getTempFile()
     outPath = getTempFile()
     try:
-        with open(seq1Path, 'w') as seq1File, open(seq2Path, 'w') as seq2File:
-            seq1File.write('>\n' + seq1)
-            seq2File.write('>\n' + seq2)
+        with open(seq1Path, 'w') as seq1File:
+            with open(seq2Path, 'w') as seq2File:
+                seq1File.write('>\n' + seq1)
+                seq2File.write('>\n' + seq2)
 
         # Run blat command
         popenCatch("blat %s %s -q=dna -tileSize=12 -stepSize=4 -minIdentity=95"
