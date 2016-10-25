@@ -14,17 +14,14 @@ def alignWithBlat(seq1, seq2):
 
     Returns size and % ID of the alignment."""
     seq1Path = getTempFile()
-    seq2Path = getTempFile()
     try:
         with open(seq1Path, 'w') as seq1File:
-            with open(seq2Path, 'w') as seq2File:
-                seq1File.write('>\n' + seq1)
-                seq2File.write('>\n' + seq2)
+            seq1File.write('>\n' + seq1)
 
         # Run blat command
-        cmd = "blat {} {} -q=dna -tileSize=12 -stepSize=4 -minIdentity=95 " \
-              "-repMatch=10 -noHead -fastMap stdout".format(seq1Path, seq2Path)
-        output = popenCatch(cmd)
+        cmd = "blat {} stdin -q=dna -tileSize=12 -stepSize=4 -minIdentity=95" \
+              " -repMatch=10 -noHead -fastMap stdout".format(seq1Path)
+        output = popenCatch(cmd, stdinString=">\n" + seq2.upper())
 
         # There may be multiple alignments, but there can be at most one
         # that fits our requirements (starts at 0 in seq1, ends at
@@ -52,7 +49,6 @@ def alignWithBlat(seq1, seq2):
         return 0, 0.0
     finally:
         os.remove(seq1Path)
-        os.remove(seq2Path)
 
 
 def findGaps(sequence):
