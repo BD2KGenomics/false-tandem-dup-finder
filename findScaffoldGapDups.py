@@ -3,8 +3,9 @@
 their location and size."""
 import re
 import os
+# import subprocess
 from argparse import ArgumentParser
-from sonLib.bioio import fastaRead, popenCatch, getTempFile
+from sonLib.bioio import fastaRead, system, getTempFile
 
 
 def alignWithBlat(seq1, seq2):
@@ -22,8 +23,14 @@ def alignWithBlat(seq1, seq2):
                 seq2File.write('>\n' + seq2)
 
         # Run blat command
-        popenCatch("blat %s %s -q=dna -tileSize=12 -stepSize=4 -minIdentity=95"
-                   " -repMatch=10 -noHead %s" % (seq1Path, seq2Path, outPath))
+        # system("blat %s %s -q=dna -tileSize=12 -stepSize=4 -minIdentity=95"
+        #            " -repMatch=10 -noHead %s" % (seq1Path, seq2Path, outPath))
+        cmd = "blat {} {} -q=dna -tileSize=12 -stepSize=4 -minIdentity=95" \
+              " -repMatch=10 -noHead -fastMap {}".format(seq1Path, seq2Path, outPath)
+        # with open(os.devnull, 'w') as devnull:
+        #     subprocess.call(cmd, shell=True, bufsize=-1, stdout=devnull)
+        system(cmd)
+
 
         # There may be multiple alignments, but there can be at most one
         # that fits our requirements (starts at 0 in seq1, ends at
@@ -87,7 +94,8 @@ def main():
             size, percentID = alignWithBlat(beforeGap, afterGap)
             if size > 20:
                 read_info = [header, gapStart, gapEnd, size, percentID]
-                print('\t'.join(str(x) for x in read_info))
+                format_str = "{}\t{}\t{}\t{}\t{:.1f}"
+                print(format_str.format(*read_info))
 
 if __name__ == '__main__':
     main()
