@@ -49,8 +49,9 @@ class AlignAndCompare(Target):
                 seq2 = genome[gap.header][gap.end:gap.after].upper()
                 size, percentID = alignWithBlat(seq1, seq2)
                 if size > 20:
-                    stats = [gap.header, gap.start, gap.end, size, percentID]
-                    outfile.write(('\t'.join(str(s) for s in stats)) + '\n')
+                    read_info = [gap.header, gap.start, gap.end, size, percentID]
+                    format_str = "{}\t{}\t{}\t{}\t{:.1f}\n"
+                    outfile.write(format_str.format(*read_info))
 
 
 class FindScaffoldGapsForTwoBit(Target):

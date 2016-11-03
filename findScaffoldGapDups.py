@@ -19,8 +19,10 @@ def alignWithBlat(seq1, seq2):
             seq1File.write('>\n' + seq1)
 
         # Run blat command
-        cmd = "blat {} stdin -q=dna -tileSize=12 -stepSize=4 -minIdentity=95" \
-              " -repMatch=10 -noHead -fastMap stdout".format(seq1Path)
+        # cmd = "blat {} stdin -q=dna -tileSize=12 -stepSize=4 -minIdentity=95" \
+        #       " -repMatch=10 -noHead -fastMap stdout".format(seq1Path)
+        cmd = "blat {} stdin -q=dna -minIdentity=95 " \
+              " -repMatch=10 -noHead stdout".format(seq1Path)
         output = popenCatch(cmd, stdinString=">\n" + seq2.upper())
 
         # There may be multiple alignments, but there can be at most one
