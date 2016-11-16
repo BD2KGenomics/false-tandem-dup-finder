@@ -94,3 +94,7 @@ sonLib/
 # vim
 *~
 *swp
+
+# output files
+*.2bit
+*.dups
