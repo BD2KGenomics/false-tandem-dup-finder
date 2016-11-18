@@ -25,7 +25,7 @@ def main():
 
     base = opts.dups.split('.')[0]
     print("{}\t{}\t{}\t{:.2f}".format(base, total, dupsScaffolds,
-          float(dupsScaffolds) / total))
+          (float(dupsScaffolds) / total) * 100))
 
 
 if __name__ == '__main__':
