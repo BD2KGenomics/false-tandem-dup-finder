@@ -23,7 +23,8 @@ def main():
     for sequence in TwoBitFile(opts.twobit).itervalues():
         total += sum(1 for _, _ in findGaps(str(sequence)))
 
-    base = opts.dups.split('.')[0]
+    base = opts.dups.split('/')[-1]
+    base = base.split('.')[0]
     print("{}\t{}\t{}\t{:.2f}".format(base, total, dupsScaffolds,
           (float(dupsScaffolds) / total) * 100))
 
