@@ -15,8 +15,8 @@ def main():
         for dup in dups:
             aboveStart = dup.gapStart - dup.dupSize
             behindEnd = dup.gapEnd + dup.dupSize
-            aboveGap = "{} {} {}".format(name, aboveStart, dup.gapStart)
-            belowGap = "{} {} {}".format(name, dup.gapEnd, behindEnd)
+            aboveGap = "{}\t{}\t{}".format(name, aboveStart, dup.gapStart)
+            belowGap = "{}\t{}\t{}".format(name, dup.gapEnd, behindEnd)
             print(aboveGap)
             print(belowGap)
 

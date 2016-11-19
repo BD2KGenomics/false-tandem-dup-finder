@@ -98,3 +98,4 @@ sonLib/
 # output files
 *.2bit
 *.dups
+*.bed
